@@ -1,0 +1,8 @@
+aula1
+
+Microcontrolador = microprocessador + memoria + relogio + ...
+
+Voce pode fazer coisas dedicadas e com baixo consumo de energia, por isso o uso de microcontroladores
+
+Centralizar nao e interessante em alguns casos, ex: Aviao, Carro ... Caso um micro nao funcione, os outros devem continuar operando
+
