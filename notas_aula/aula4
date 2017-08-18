@@ -1,0 +1,10 @@
+.w no Assembly significa `word` (todos os 16 bits)
+
+	mov.w R5, R6 ;Comentarios apos o `;`. Esta instrucao move a palavra de R5 para R6
+
+O segundo operando recebe o resultado da operacao **sempre**
+(OBS: Inteiro tem 2 bytes (16 bits) no MSP. Cada posição de um array de ints são dois bytes):
+
+	g = h + A[8] // Onde A é um array de inteiros.
+	mov.w 16(R9), R5 ;Anda 16 bytes de onde está A[0], pois cada int 	sao dois bytes. Armazena em R5, que é a variável g, neste caso.
+	add R6, R5 ; Adiciona os valores de R6 (h) com R5 (g) e armazena 	em R5 (g)
