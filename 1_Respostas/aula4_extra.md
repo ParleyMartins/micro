@@ -25,7 +25,37 @@ Utilize os registradores R11, R12, R13, R14 e R15 para armazenar valores tempor√
 	add.w R11, R5
 
 (d) `A[2] = 6*A[1] + 5*A[0];`
+	mov.w 2(R9), R11
+	add.w R11, R11
+	add.w R11, R11
+	add.w 2(R9), R11
+	add.w 2(R9), R11
+	mov.w 0(R9), R12
+	add.w R12, R12
+	add.w R12, R12
+	add.w 0(R9), R12
+	add.w R11, R12
+	mov.w R12, 4(R9)
 
 (e) `A[3] = 3*f - 5*h;`
+	mov.w R4, R11
+	add.w R11, R11
+	add.w R4, R11
+	mov.w R6, R12
+	add.w R12, R12
+	add.w R12, R12
+	add.w R6, R12
+	sub.w R11, R12
+	mov.w R12, 6(R9)
 
 (f) `A[5] = 6*(f - 2*h);`
+	mov.w R6, R11
+	add.w R11, R11
+	mov.w R4, R12
+	sub.w R11, R12
+	add.w R12, R11
+	add.w R12, R12
+	add.w R12, R12
+	add.w R11, R12
+	add.w R11, R12
+	mov.w R12, 10(R9)
