@@ -1,0 +1,13 @@
+Funcoes
+
+Por convencao, cada argumento sera lido dos registradores R15, R14, R13, R12 (NESSA ORDEM).
+
+Ret - Retorna a proxima instrucao apos a chamada da funcao.
+
+(OBS: sub.w R1, R2 == R2 - R1)
+
+push - Adiciona o valor de um registrador à pilha
+pop - Remove ultimo elemento da pilha
+
+(instrucao).b - Move apenas um byte. Util quando se trabalha com char
+
