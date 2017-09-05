@@ -1,29 +1,29 @@
-\documentclass[conference]{IEEEtran}
+\documentclass[12pt,journal,compsoc]{IEEEtran}
 \usepackage[utf8x]{inputenc}
 \usepackage[portuguese]{babel}
 \hyphenation{op-tical net-works semi-conduc-tor}
 
-
 \begin{document}
-\title{Automação residencial: Comandando lâmpadas pelo \emph{Telegram}}
+\title{Automação residencial:\\Comandando lâmpadas pelo \emph{Telegram}}
 
-
-\author{\IEEEauthorblockN{Parley Martins}
-\IEEEauthorblockA{Faculdade UnB Gama\\
-Universidade de Brasília\\
-Brasília, Brasil\\
-parleypachecomartins@gmail.com}
+\author{\IEEEauthorblockN{Parley Martins - 11/0038096}
+% \IEEEauthorblockA{Faculdade UnB Gama\\
+% Universidade de Brasília\\
+% Brasília, Brasil\\
+% parleypachecomartins@gmail.com}
 }
 
-\maketitle
-
-
+\IEEEcompsoctitleabstractindextext{%
 \begin{abstract}
 %\boldmath
 Este trabalho propõe a utilização de automação residencial para possibilitar ao usuário acender e apagar lâmpadas remotamente, utilizando integração com aplicativo no celular.
 \end{abstract}
 
-\IEEEpeerreviewmaketitle
+\begin{IEEEkeywords}
+Automação Residencial, Telegram, bot, \emph{smart house}
+\end{IEEEkeywords}}
+
+\maketitle
 
 \section{Introdução}
 % justificativa, objetivos, requisitos, benefícios, revisão bibliográfica).
@@ -32,10 +32,31 @@ Automação residencial é resultado da combinação de espaços residenciais, c
 No entanto com um mundo conectado pela internet, que mudou o jeito que as pessoas se comunicam e se relacionam, é normal que este conceito esteja cada vez mais próximo da realidade das pessoas. Para ter mais conforto, já é possível controlar pelo celular o volume das televisões (e outros aparelhos de som), o canal em que se está, a intensidade com que aparelhos devem funcionar, entre outras comodidades. Para ter mais segurança, é possível controlar luzes, sistema de alarmes, de detecção de movimentos, etc. Existem diversas empresas que fornecem esse tipo de serviço, mas eles ainda podem ter um custo muito elevado.
 
 \section{Solução}
-\subsection{Hardware}
-\subsection{Software}
-\section{Resultados}
-\section{Conclusão}
+
+Para facilitar e desmistificar o acesso à automação residencial, a proposta deste projeto é implementar um sistema que possa controlar remotamente as lâmpadas de uma casa. O usuário, após instalação do sistema físico, poderá utilizar seu \emph{smartphone} para ligar e desligar as lâmpadas.
+
+A interação com o usuário se dará através de um bot no aplicativo \emph{Telegram}. Deve-se iniciar uma 'conversa' com o bot, e mandar o comando desejado (ligar ou desligar, por exemplo). Este irá mandar para o módulo wifi do sistema, que fará a comunicação com o MSP, desligando ou ligando a lâmpada selecionada.
+
+Para fins deste trabalho, uma lâmpada e uma fonte de energia externas, controladas pela protoboard, serão utilizadas para facilitar a instalação e testes.
+
+O hardware será composto, inicialmente, pelos seguintes items:
+
+\begin{itemize}
+\item protoboard, para execução do sistema;
+\item microcontrolador MSP430, irá executar o controle da energia na lâmpada;
+\item módulo esp8266, proverá o acesso à rede wifi;
+\item lâmpada, para testes;
+\item fonte de energia, tanto para o microcontrolador quanto para a lâmpada.
+\end{itemize}
+
+\subsection{Requisitos}
+
+O software do microcontrolador deve corretamente identicar os comandos e apagar ou acender a lâmpada, conforme instrução recebida.
+
+O \emph{bot}, software que responde a comandos pré definidos automaticamente, deve ser integrado ao aplicativo \textit{Telegram} e deve mandar instruções de ligar e de desligar a lâmpada.
+
+O sistema, tanto harware quanto software, deve ter acesso à internet para o funcionamento correto.
+
 
 \bibliographystyle{IEEEtran}
 \bibliography{IEEEabrv,bibliografia}
