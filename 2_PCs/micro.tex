@@ -39,7 +39,7 @@ A interação com o usuário se dará através de um bot no aplicativo \emph{Tel
 
 Para fins deste trabalho, uma lâmpada e uma fonte de energia externas, controladas pela protoboard, serão utilizadas para facilitar a instalação e testes.
 
-O hardware será composto, inicialmente, pelos seguintes items:
+O \textit{hardware} será composto, inicialmente, pelos seguintes items:
 
 \begin{itemize}
 \item protoboard, para execução do sistema;
@@ -49,14 +49,19 @@ O hardware será composto, inicialmente, pelos seguintes items:
 \item fonte de energia, tanto para o microcontrolador quanto para a lâmpada.
 \end{itemize}
 
+O \textit{software} embarcado no microcontrolador será escrito nas linguagens C e Assembly, enquanto o código do \textit{bot} será desenvolvido utilizando Python 3. Os serviços serão conectados através do IFTTT, que conecta servidores de terceiros a outros serviços \cite{ovadia2014automate}.
+
 \subsection{Requisitos}
 
-O software do microcontrolador deve corretamente identicar os comandos e apagar ou acender a lâmpada, conforme instrução recebida.
+O \textit{software} do microcontrolador deve corretamente identicar os comandos e apagar ou acender a lâmpada, conforme instrução recebida.
 
-O \emph{bot}, software que responde a comandos pré definidos automaticamente, deve ser integrado ao aplicativo \textit{Telegram} e deve mandar instruções de ligar e de desligar a lâmpada.
+O \emph{bot}, \textit{software} que responde a comandos pré definidos automaticamente, deve ser integrado ao aplicativo \textit{Telegram} e deve mandar instruções de ligar e de desligar a lâmpada.
 
-O sistema, tanto harware quanto software, deve ter acesso à internet para o funcionamento correto.
+O sistema completo, tanto hardware quanto \textit{software}, deve ter acesso à internet para o funcionamento correto.
 
+\subsection{Benefícios}
+
+Este projeto tem como principal beneficiário o cidadão comum que quer ter um pouco do conforto que a automação residencial traz a sua casa. Além disso, ajudará na economia de energia, já que a pessoa pode mandar um comando de apagar determinada luz, mesmo a distância.
 
 \bibliographystyle{IEEEtran}
 \bibliography{IEEEabrv,bibliografia}
