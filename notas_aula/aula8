@@ -1,0 +1,33 @@
+interrupções - Funcoes chamadas por hardware
+
+Em C:
+	A >> 8 --- Significa desloque 8 bits para a direita. O número depois do >> significa a quantidade de bits a serem deslocados
+
+GIE - Global Interrupt Enable. Quando GIE == 1, as interrupções serão executadas. Algumas interrupções podem rodar independente do valor de GIE. Essas são chamadas não-mascaráveis.
+
+ISR - Interrupt Service Routine - Para interrupcoes do hardware. Tem vantagens com relacao a subrotinas normais, como precisao da execucao.
+
+Modo de baixo consumo:
+
+LPM - Low power mode. Níveis de 1 a 4, onde 1 gasta mais energia (300 mA), e 4 gasta menos (~0.1 uA)
+
+bis.w #LPM3, SR ==> _low_power_mode_3()
+
+
+
+
+Registradores Básicos da porta P1:
+
+P1IN - Leitura, volátil. Valores de entrada de energia. Nao preciso ler todo o P1. Posso ler so alguns pinos, ex P1.3. Para isso pode-se fazer uma mascara com os bits desejados (P1 & BIT3)
+
+(Em C, | é a soma lógica, ou seja, ou bit a bit. & é a multiplicação logica, ou seja, and bit a bit)
+
+P1OUT - Pode ser entrada ou saída
+P1DIR - Direção - saída ou entrada. 1 - Saída, 0 - Entrada. Precisa do P1OUT pra indicar se é pull-up ou pull-down.
+P1IE - Habilita uma interrupcao para essa porta, no bit (PINO) especificado.
+P1IES - Diz se a interrupcao sera feita na borda de subida ou de descida.
+P1IFG - Indica se houve ou não uma interrupção POR PINO. Deve ser zerado apos a interrupcao, ou ela sera chamada novamente.
+
+volatile - em C signifca que a variavel pode mudar a qualquer momento
+
+
