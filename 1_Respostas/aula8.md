@@ -81,5 +81,71 @@ int main(void){
 ```
 
 4. Escreva um código em C que pisca os LEDs ininterruptamente somente se o botão for pressionado.
+```C
+#include <msp430g2553.h>
+
+#define LED1 BIT0
+#define LED2 BIT6
+#define LEDS (LED1|LED2)
+
+#define BTN BIT3
+
+int main(void){
+	WDTCTL = WDTPW | WDTHOLD;
+	P1OUT |= ~LEDS;
+	P1DIR |= LEDS;
+
+	P1DIR &= ~BTN;
+	P1OUT |= BTN;
+	P1REN |= BTN;
+
+	while(1){
+		if((P1IN&BTN) == 0){
+			P1OUT ^= LEDS;
+			delay(OxFFFF);
+			P1OUT ^= LEDS;
+		} else {
+			P1OUT &= ~LEDS;
+		}
+	}
+}
+```
+
+
 
 5. Escreva um código em C que acende os LEDs quando o botão é pressionado. Deixe o MSP430 em modo de baixo consumo, e habilite a interrupção do botão.
+
+```C
+#include <msp430g2553.h>
+#include <legacymsp430.h> // Para rodar interrupcoes
+
+#define LED1 BIT0
+#define LED2 BIT6
+#define LEDS (LED1|LED2)
+
+#define BTN BIT3
+
+int main(void){
+	WDTCTL = WDTPW | WDTHOLD;
+	P1OUT |= ~LEDS;
+	P1DIR |= LEDS;
+
+	P1DIR &= ~BTN;
+	P1OUT |= BTN;
+	P1REN |= BTN;
+	P1IES |= BTN;
+	P1IE |= BTN;
+
+	_BIS_SR(GIE + LPM4_bits);
+	return 0;
+}
+
+interrupt(PORT1_VECTOR) Interrupcao_P1(void)
+{
+	while((P1IN&BTN)==0){
+		P1OUT |= LEDS;
+	}
+	P1OUT |= ~LEDS;
+	P1IFG &= ~BTN;
+}
+```
