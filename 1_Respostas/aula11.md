@@ -104,36 +104,68 @@ int main(void) {
 #define MILISECOND 125
 
 void atraso(volatile unsigned int x) {
-  int i = 0;
-  for(i = 0; i < x; i++){
-    while((TA0CTL & TAIFG)==0);
-    TA0CTL &= ~TAIFG;
-  }
+	int i = 0;
+	for(i = 0; i < x; i++){
+	while((TA0CTL & TAIFG)==0);
+		TA0CTL &= ~TAIFG;
+	}
 }
 
 int main(void) {
-  WDTCTL = WDTPW + WDTHOLD;
+	WDTCTL = WDTPW + WDTHOLD;
 
-  BCSCTL1 = CALBC1_1MHZ;
-  DCOCTL = CALDCO_1MHZ;
+	BCSCTL1 = CALBC1_1MHZ;
+	DCOCTL = CALDCO_1MHZ;
 
-  P1OUT &= ~LEDS;
-  P1DIR |= LEDS;
+	P1OUT &= ~LEDS;
+	P1DIR |= LEDS;
 
-  TACTL |= TAIE + TASSEL_2 + ID_3 + MC_1;
-  TACCR0 = MILISECOND;
+	TACTL |= TAIE + TASSEL_2 + ID_3 + MC_1;
+	TACCR0 = MILISECOND;
 
-  _BIS_SR(GIE + LPM1_bits);
+	_BIS_SR(GIE + LPM1_bits);
 }
 
 interrupt(TIMER0_A1_VECTOR) blink_led(void){
-  P1OUT ^= LEDS;
-  atraso(1000);
+	P1OUT ^= LEDS;
+	atraso(1000);
 }
 ```
 
 7. Defina a função `void paralelo_para_serial(void);` que lê o byte de entrada via porta P1 e transmite os bits serialmente via pino P2.0. Comece com um bit em nivel alto, depois os bits na ordem P1.0 - P1.1 - … - P1.7 e termine com um bit em nível baixo. Considere um período de 1 ms entre os bits.
 
+```C
+void paralelo_para_serial(void) {
+	P1DIR &= ~0xFF;
+	atraso(1);
+	unsigned char a = P1IN;
+
+	P2OUT |= BIT0;
+	P2DIR |= BIT0;
+
+	int i = 0;
+	for(i = 0; i < 8; i++){
+		P2OUT = ( (a << i) & BIT0 );
+		atraso(1);
+	}
+
+	P2OUT &= ~BIT0;
+}
+```
+
 8. Faça o programa completo que lê um byte de entrada serialmente via pino P2.0 e transmite este byte via porta P1. O sinal serial começa com um bit em nivel alto, depois os bits na ordem 0-7 e termina com um bit em nível baixo. Os pinos P1.0-P1.7 deverão corresponder aos bits 0-7, respectivamente. Considere um período de 1 ms entre os bits.
+```C
+void serial_paralelo(void) {
+	P2DIR &= ~BIT0;
+	atraso(1);
+
+	int i;
+	for(i = 0; i < 8; i++){
+		P1OUT |= (( P2IN & BIT0 ) >> i);
+		atraso(1);
+	}
+}
+```
+
 
 9. Defina a função `void ConfigPWM(volatile unsigned int freqs, volatile unsigned char ciclo_de_trabalho);` para configurar e ligar o Timer_A em modo de comparação. Considere que o pino P1.6 já foi anteriormente configurado como saída do canal 1 de comparação do Timer_A, que somente os valores {100, 200, 300, …, 1000} Hz são válidos para a frequência, que somente os valores {0, 25, 50, 75, 100} % são válidos para o ciclo de trabalho, e que o sinal de clock SMCLK do MSP430 está operando a 1 MHz.
