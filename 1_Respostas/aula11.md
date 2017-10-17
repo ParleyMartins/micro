@@ -179,7 +179,7 @@ void serial_paralelo(void) {
 void ConfigPWM(volatile unsigned int freqs, volatile unsigned char ciclo_de_trabalho){
 	TACCTL1 = OUTMOD_3;
 	TACCR0 = BASE_CONTAGEM/(freqs/100) - 1;
-	TACCR1 = (TACCR0+1)*(ciclo_de_trabalho/100);
+	TACCR1 = (TACCR0+1)*ciclo_de_trabalho/100;
 	TACTL = TASSEL_2 + ID_3 + MC_1;
 }
 
