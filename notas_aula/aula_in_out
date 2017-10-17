@@ -1,0 +1,23 @@
+Charlieplexing: duas saidas e uma entrada
+
+Obs (no codigo em C):
+|=		para setar o bit (fazer bit = 1)
+&= ~	para zerar o bit (fazer bit = 0)
+
+Cargas mais pesadas:
+Ie = Ic + Ib
+Il = Ic
+Ib (corrente base)
+Ic = beta * Ib
+R = (Vcc - Vbe) / Ib = (Vcc-Vbe) * beta / Ic
+
+Darlington
+
+Ic = Ib * beta²
+Rb 	= (Vcc - 2Vbe) / Ib
+	= (Vcc - 2Vbe) * beta² / Ic
+
+beta tipico == hfe
+
+
+Lampada = rele corrente alternada
