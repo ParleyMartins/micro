@@ -169,3 +169,27 @@ void serial_paralelo(void) {
 
 
 9. Defina a função `void ConfigPWM(volatile unsigned int freqs, volatile unsigned char ciclo_de_trabalho);` para configurar e ligar o Timer_A em modo de comparação. Considere que o pino P1.6 já foi anteriormente configurado como saída do canal 1 de comparação do Timer_A, que somente os valores {100, 200, 300, …, 1000} Hz são válidos para a frequência, que somente os valores {0, 25, 50, 75, 100} % são válidos para o ciclo de trabalho, e que o sinal de clock SMCLK do MSP430 está operando a 1 MHz.
+
+```C
+#include <msp430g2553.h>
+#include <legacymsp430.h>
+
+#define BASE_CONTAGEM 1250
+
+void ConfigPWM(volatile unsigned int freqs, volatile unsigned char ciclo_de_trabalho){
+	TACCTL1 = OUTMOD_3;
+	TACCR0 = BASE_CONTAGEM/(freqs/100) - 1;
+	TACCR1 = (TACCR0+1)*ciclo_de_trabalho/100;
+	TACTL = TASSEL_2 + ID_3 + MC_1;
+}
+
+int maind(void){
+	BCSCTL1 = CALBC1_1MHZ;
+	DCOCTL = CALDCO_1MHZ;
+
+	P1DIR |= BIT6;
+	P1SEL |= BIT6;
+	P1SEL2 &= ~BIT6;
+	return 0;
+}
+```
