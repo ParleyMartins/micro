@@ -33,12 +33,12 @@ void send_data(unsigned char c)
 void init_uart()
 {
 	P1SEL2 = P1SEL = RX + TX;
-	UCA0CTL0 = 0; //UART, 8bits, sem paridade,
-	UCA0CTL1 = UCSSEL_2; // SMCLK
-	UCA0BR0 = 104; //Baud rate: 9600
+	UCA0CTL0 = 0;
+	UCA0CTL1 = UCSSEL_2;
+	UCA0BR0 = 104;
 	UCA0BR1 = 0;
-	UCA0MCTL = UCBRF_0 + UCBRS_1; //Baud rate: 9600
-	IE2 |= UCA0RXIE; // Habilita a interrupcao por chegada de dados via UART
+	UCA0MCTL = UCBRF_0 + UCBRS_1;
+	IE2 |= UCA0RXIE;
 }
 
 void send_state(char state[]){
@@ -55,10 +55,9 @@ void send_state(char state[]){
 
 interrupt(USCIAB0RX_VECTOR) set_lamp_state(void){
 	unsigned char state = UCA0RXBUF;
-//  send_data(state);
-	if(state == 'l'){ // liga a lampada
+	if(state == 'l'){
 		P1OUT |= LAMP;
-	} else if(state == 'd') { // desliga a lampada
+	} else if(state == 'd') {
 		P1OUT &= ~LAMP;
 	} else if(state == 'e') {
 		if((P1OUT&LAMP)==0){

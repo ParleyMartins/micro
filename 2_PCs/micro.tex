@@ -1,12 +1,48 @@
 \documentclass[12pt,journal,compsoc]{IEEEtran}
 \usepackage[utf8x]{inputenc}
 \usepackage[portuguese]{babel}
+\usepackage{listings}
+
+\usepackage{color}
+
+\definecolor{mygreen}{rgb}{0,0.6,0}
+\definecolor{mygray}{rgb}{0.5,0.5,0.5}
+\definecolor{mymauve}{rgb}{0.58,0,0.82}
+
+\lstset{ %
+	basicstyle=\ttfamily\footnotesize,
+	backgroundcolor=\color{white},
+	breakatwhitespace=false,
+	breaklines=true,
+	commentstyle=\color{mygreen},
+	deletekeywords={...},
+	escapeinside={\%*}{*)},
+	extendedchars=true,
+	% frame=single,
+	keepspaces=true,
+	keywordstyle=\color{blue},
+	language=bash,
+	morekeywords={cp},
+	numbers=left,
+	numbersep=2pt,
+	numberstyle=\tiny\color{mygray},
+	rulecolor=\color{black},
+	showspaces=false,
+	showstringspaces=false,
+	showtabs=false,
+	stepnumber=2,
+	stringstyle=\color{mymauve},
+	tabsize=2,
+	title=\lstname
+}
+
 \hyphenation{op-tical net-works semi-conduc-tor}
 
 \begin{document}
 \title{Automação residencial:\\Comandando lâmpadas pelo \emph{Telegram}}
 
 \author{\IEEEauthorblockN{Parley Martins - 11/0038096}
+\IEEEauthorblockN{Tatielen Pereira - 12/0136074}
 % \IEEEauthorblockA{Faculdade UnB Gama\\
 % Universidade de Brasília\\
 % Brasília, Brasil\\
@@ -62,6 +98,15 @@ O sistema completo, tanto hardware quanto \textit{software}, deve ter acesso à 
 \subsection{Benefícios}
 
 Este projeto tem como principal beneficiário o cidadão comum que quer ter um pouco do conforto que a automação residencial traz a sua casa. Além disso, ajudará na economia de energia, já que a pessoa pode mandar um comando de apagar determinada luz, mesmo a distância.
+
+\subsection{Resultados Parciais}
+
+Para realizar a comunicação entre a internet e o MSP foi escolhido o módulo ESP 8266, no entanto, até este ponto do trabalho, não foi possível comunicar os dois. O ESP parece não se conectar à internet ou receber os comandos AT que deveria. O ESP foi conectado à entrada e saída seriais do MSP, mas não deu resultado. Outra tentativa foi utilizar um conversor USB-serial para transmitir o \textit{firmware} diretamente pro ESP, que também se provou infrutífero, talvez por algum erro de conexão.
+
+O MSP foi configurado para receber um caractere na conexão UART, que deveria vir da interet, que trocará o estado da lâmpada ou lerá esse estado. Os caracteres aceitos são \texttt{l}, para ligar; \texttt{d}, para desligar; e \texttt{e} para ler e retornar o estado atual da lâmpada. Qualquer outro input resultará em nenhum retorno ou ação do MSP. O código abaixo inicializa o modo de comunicação UART com \textit{baud rate} 9600 e \textit{clock} em 1MHz. Caso algum dado seja recebido, uma interrupção do RX do UART será acionada. Esta interrupção lerá o valor recebido e tomará uma ação de acordo com o explicado acima. Para substituir a lâmpada, por enquanto, o LED conectado ao pino P1.6 do MSP está sendo utilizado.
+
+\lstinputlisting[language=c, caption={\texttt{lamp.c}}, label=lst:lamp.c]{lamp.c}
+
 
 \bibliographystyle{IEEEtran}
 \bibliography{IEEEabrv,bibliografia}
