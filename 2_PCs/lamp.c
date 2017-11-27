@@ -33,20 +33,17 @@ void send_data(unsigned char c)
 void init_uart()
 {
 	P1SEL2 = P1SEL = RX + TX;
-	UCA0CTL0 = 0;
-	UCA0CTL1 = UCSSEL_2;
-	UCA0BR0 = 104;
+	UCA0CTL0 = 0; //UART, 8bits, no parity,
+	UCA0CTL1 = UCSSEL_2; // SMCLK
+	UCA0BR0 = 104; //Baud rate: 9600
 	UCA0BR1 = 0;
-	UCA0MCTL = UCBRF_0 + UCBRS_1;
-	IE2 |= UCA0RXIE;
+	UCA0MCTL = UCBRF_0 + UCBRS_1; //Baud rate: 9600
+	IE2 |= UCA0RXIE; // Set interrruption by UART data arrival
 }
 
 void send_state(char state[]){
-	char phrase[] = "Estado: ";
 	int i = 0;
-	for(i = 0; phrase[i] != '\0'; i++){
-		send_data(phrase[i]);
-	}
+
 	for(i = 0; state[i] != '\0'; i++){
 		send_data(state[i]);
 	}
@@ -55,15 +52,15 @@ void send_state(char state[]){
 
 interrupt(USCIAB0RX_VECTOR) set_lamp_state(void){
 	unsigned char state = UCA0RXBUF;
-	if(state == 'l'){
+	if(state == 'n'){ // turn the light on
 		P1OUT |= LAMP;
-	} else if(state == 'd') {
+	} else if(state == 'f') { // turn the light off
 		P1OUT &= ~LAMP;
-	} else if(state == 'e') {
+	} else if(state == 's') { // check light state
 		if((P1OUT&LAMP)==0){
-			send_state("desligado");
+			send_state("off");
 		} else{
-			send_state("ligado");
+			send_state("on");
 		}
 	}
 }
