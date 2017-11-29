@@ -167,9 +167,8 @@ O ESP foi configurado para se conectar à internet, mas não foi possível fazê
 
 \subsection{Software}
 
-O MSP foi configurado para receber um caractere na conexão UART que troca ou lê o estado da lâmpada. Os caracteres aceitos são \texttt{n}, para ligar; \texttt{f}, para desligar; e \texttt{s} para ler e retornar o estado atual da lâmpada. Qualquer outro input resultará em nenhum retorno ou ação do MSP. O código \ref{lst:lamp.c} inicializa o modo de comunicação UART com \textit{baud rate} 9600 e \textit{clock} em 1MHz. Caso algum dado seja recebido, uma interrupção do RX do UART será acionada. Esta interrupção lerá o valor recebido e tomará uma ação de acordo com o explicado acima. Para substituir a lâmpada, por enquanto, o LED conectado ao pino P1.6 do MSP está sendo utilizado.
+O MSP foi configurado para receber um caractere na conexão UART que troca ou lê o estado da lâmpada. Os caracteres aceitos são \texttt{n}, para ligar; \texttt{f}, para desligar; e \texttt{s} para ler e retornar o estado atual da lâmpada. Qualquer outro input resultará em nenhum retorno ou ação do MSP. O código \ref{lst:lamp.c} do Anexo A inicializa o modo de comunicação UART com \textit{baud rate} 9600 e \textit{clock} em 1MHz. Caso algum dado seja recebido, uma interrupção do RX do UART será acionada. Esta interrupção lerá o valor recebido e tomará uma ação de acordo com o explicado acima. Para substituir a lâmpada, por enquanto, o LED conectado ao pino P1.6 do MSP está sendo utilizado.
 
-\lstinputlisting[language=c, caption={\texttt{lamp.c}}, label=lst:lamp.c]{lamp.c}
 
 O \textit{bot} do Telegram foi feito para responder à comandos pré-definidos. Após o uso de um deles, o \textit{bot} responde o usuário com uma mensagem de texto ou emoji, para demonstrar que o MSP recebeu e executou o comando, como demonstrado na Figura \ref{fig:telegram}.
 
@@ -186,6 +185,8 @@ O \textit{bot} do Telegram foi feito para responder à comandos pré-definidos. 
 \label{fig:telegram}
 \end{figure}
 
+Para o Ćódigo \ref{lst:bot.py} do \textit{bot}, a biblioteca \texttt{python-telegram-bot}, que é um \textit{wrapper} da API do Telegram para fazer bots escrito em Python, foi utilizada. Primeiramente alguns \textit{imports} são feitos e o log é definido. A função \texttt{send\_message} recebe um caractere que será enviado ao MSP. A conexão serial é aberta, o caractere é enviado e a conexão é fechada. A função \texttt{read\_return\_message} faz o mesmo da anterior, mas lê o retorno da mensagem mandada. As três próximas funções, \texttt{turn\_on, turn\_off} e \texttt{check\_state} são para gerenciar os comandos do \textit{bot}. Elas mandam uma mensagem para o MSP e depois uma para o usuário com o retorno da comunicação serial ou uma mensagem indicando que a ação foi executada. Os comandos são adicionados ao \textit{dispatcher} do \textit{bot}.
+
 
 \section{Resultados}
 
@@ -194,7 +195,13 @@ Para realizar a comunicação entre a internet e o MSP foi escolhido o modulo ES
 
 \section{Conclusão}
 
+\section*{Anexo A - Código MSP}
 
+\lstinputlisting[language=c, caption={\texttt{lamp.c}}, label=lst:lamp.c]{lamp.c}
+
+\section*{Anexo B - Código Telegram}
+
+\lstinputlisting[language=python, caption={\texttt{bot.py}}, label={lst:bot.py}]{bot.py}
 
 \bibliographystyle{IEEEtran}
 \bibliography{IEEEabrv,bibliografia}
