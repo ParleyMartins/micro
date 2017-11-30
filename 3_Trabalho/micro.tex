@@ -122,6 +122,8 @@ Protoboard  & 1 \\ \hline
 Relé & 1 \\ \hline
 Diodo & 1 \\ \hline
 Lâmpada Led 12w  & 1 \\ \hline
+Módulo relé  & 1 \\ \hline
+USB to TTL D-Sun (conversor USB-serial)  & 1 \\ \hline
 Jumpers & Indefinido  \\ \hline
 \end{tabular}
 \end{table}
@@ -138,9 +140,9 @@ O diagrama de blocos tem como objetivo apresentar o princípio de funcionamento 
 
 \begin{itemize}
 \item \underline{Interface de apresentação} será o meio de comunicação entre o usuário e o sistema. Com o auxílio do aplicativo Telegram será possível escolher se o usuário acenderá, apagará ou verificar o estado em que a lâmpada se encontra.
-\item \underline{Sistema de controle do módulo ESP8266} receberá a decisão enviada via aplicativo por conexão wifi para maior mobilidade do usuário. Como o usuário possui a possibilidade de verificar o estado da lâmpada o sistema de controle do módulo Wifi também envia um sinal de retorno para o app Telegram.
+\item \underline{Sistema de controle do módulo ESP8266} Recebe o sinal do \textit{bot} do Telegram e manda para o MSP a entrada correspondente. Retorna ao telegram com alguma mensagem útil para o usuário saber o status da sua requisição. Como o ESP não funcionou de modo esperado, esse sistema (servidor) foi simulado no próprio computador.
 \item \underline{Sistema de controle do MSP430} será ligado junto ao módulo Wifi, onde será recebida e executada a decisão do usuário. Como o usuário possui a possibilidade de verificar o estado da lâmpada sistema de controle do MSP430 também envia um sinal de retorno para o módulo Wifi.
-\item \underline{Lâmpada} será acesa dependendo da decisão do usuário.
+\item \underline{Lâmpada} será acesa ou apagada dependendo da decisão do usuário.
 \end{itemize}
 
 Para conectar o módulo Wifi ESP8266 ao MSP430 foram conectados os seguintes pinos, de acordo com a Tabela \ref{tab:conexoes}. A lâmpada até o momento só foi testada com o LED 1 do próprio MSP.
@@ -163,11 +165,11 @@ RX & P1.3 \\ \hline
 \end{tabular}
 \end{table}
 
-O ESP foi configurado para se conectar à internet, mas não foi possível fazê-lo mandar dados para o MSP.
+Não foi possível fazer a conexão entre o MSP430 e o ESP8266. Então foi feita uma conexão entre o conversor USB-serial e o MSP430 utilizando um servidor simulado no computador, que será explicado no próximo tópico. Para ligar a lâmpada ao MSP foi utilizado um modulo relé 5V.
 
 \subsection{Software}
 
-O MSP foi configurado para receber um caractere na conexão UART que troca ou lê o estado da lâmpada. Os caracteres aceitos são \texttt{n}, para ligar; \texttt{f}, para desligar; e \texttt{s} para ler e retornar o estado atual da lâmpada. Qualquer outro input resultará em nenhum retorno ou ação do MSP. O código \ref{lst:lamp.c} do Anexo A inicializa o modo de comunicação UART com \textit{baud rate} 9600 e \textit{clock} em 1MHz. Caso algum dado seja recebido, uma interrupção do RX do UART será acionada. Esta interrupção lerá o valor recebido e tomará uma ação de acordo com o explicado acima. Para substituir a lâmpada, por enquanto, o LED conectado ao pino P1.6 do MSP está sendo utilizado.
+O MSP foi configurado para receber um caractere na conexão UART que troca ou lê o estado da lâmpada. Os caracteres aceitos são \texttt{n}, para ligar; \texttt{f}, para desligar; e \texttt{s} para ler e retornar o estado atual da lâmpada. Qualquer outro input resultará em nenhum retorno ou ação do MSP. O código \ref{lst:lamp.c} do Apêndice A inicializa o modo de comunicação UART com \textit{baud rate} 9600 e \textit{clock} em 1MHz. Caso algum dado seja recebido, uma interrupção do RX do UART será acionada. Esta interrupção lerá o valor recebido e tomará uma ação de acordo com o explicado acima. Para substituir a lâmpada, por enquanto, o LED conectado ao pino P1.6 do MSP está sendo utilizado.
 
 
 O \textit{bot} do Telegram foi feito para responder à comandos pré-definidos. Após o uso de um deles, o \textit{bot} responde o usuário com uma mensagem de texto ou emoji, para demonstrar que o MSP recebeu e executou o comando, como demonstrado na Figura \ref{fig:telegram}.
@@ -185,21 +187,26 @@ O \textit{bot} do Telegram foi feito para responder à comandos pré-definidos. 
 \label{fig:telegram}
 \end{figure}
 
-Para o Ćódigo \ref{lst:bot.py} do \textit{bot}, a biblioteca \texttt{python-telegram-bot}, que é um \textit{wrapper} da API do Telegram para fazer bots escrito em Python, foi utilizada. Primeiramente alguns \textit{imports} são feitos e o log é definido. A função \texttt{send\_message} recebe um caractere que será enviado ao MSP. A conexão serial é aberta, o caractere é enviado e a conexão é fechada. A função \texttt{read\_return\_message} faz o mesmo da anterior, mas lê o retorno da mensagem mandada. As três próximas funções, \texttt{turn\_on, turn\_off} e \texttt{check\_state} são para gerenciar os comandos do \textit{bot}. Elas mandam uma mensagem para o MSP e depois uma para o usuário com o retorno da comunicação serial ou uma mensagem indicando que a ação foi executada. Os comandos são adicionados ao \textit{dispatcher} do \textit{bot}.
+Para o Ćódigo \ref{lst:bot.py} do \textit{bot} a biblioteca \texttt{python-telegram-bot}, que é um \textit{wrapper} da API do Telegram para fazer bots escrito em Python, foi utilizada. Primeiramente alguns \textit{imports} são feitos e o log é definido. A função \texttt{send\_message} recebe um caractere que será enviado ao MSP. A conexão serial é aberta, o caractere é enviado e a conexão é fechada. A função \texttt{read\_return\_message} faz o mesmo da anterior, mas lê o retorno da mensagem mandada. As três próximas funções, \texttt{turn\_on, turn\_off} e \texttt{check\_state} são para gerenciar os comandos do \textit{bot}. Elas mandam uma mensagem para o MSP e depois uma para o usuário com o retorno da comunicação serial ou uma mensagem indicando que a ação foi executada. Os comandos são adicionados ao \textit{dispatcher} do \textit{bot}.
 
 
 \section{Resultados}
 
-Para realizar a comunicação entre a internet e o MSP foi escolhido o modulo ESP 8266, no entanto, até este ponto do trabalho, a conexão entre eles não está totalmente pronta, pois comandos realizados em relação ao módulo wifi não estão gerando respostas satisfatórias. O ESP parece se conecta a internet, mas não devolve informações simples como o IP.
+Inicialmente foi desenvolvido o código referente a proposta do projeto que seria de ligar uma lâmpada via Telegram por uma conexão Wi-fi utilizando modulo wireless. No entanto, não foi possível obter a conexão entre o modulo wireless e o MSP430, mesmo após a pesquisa de várias formas para obter sucesso na conexão.
+
+Para fins didáticos, o objetivo do trabalho foi alcançado, afinal há o controle da lâmpada pelo Telegram com êxito. No entanto, porque o ESP não funcionou como esperado, o projeto ficou um pouco inviável, sendo apenas um protótipo funcional para trabalhos futuros.
 
 
 \section{Conclusão}
+A realização deste projeto foi agradável, oferecendo oportunidade de aprendizagem e construção de novos conhecimentos ainda não explorados pela dupla de alunos. Muitas dificuldades foram encontradas durante a construção do projeto, principalmente a conexão entre o módulo Wifi e o MSP.
 
-\section*{Anexo A - Código MSP}
+Apesar do objetivo geral deste projeto não ter sido totalmente alcançado, os conhecimentos adquiridos durante a execução do projeto foram importantes para consolidar o aprendizado das aulas expositivas realizadas, bem como adquirir experiência prática na construção de circuitos e desenvolvimento de código em microcontroladores.
+
+\section*{Apêndice A - Código MSP}
 
 \lstinputlisting[language=c, caption={\texttt{lamp.c}}, label=lst:lamp.c]{lamp.c}
 
-\section*{Anexo B - Código Telegram}
+\section*{Apêndice B - Código Telegram}
 
 \lstinputlisting[language=python, caption={\texttt{bot.py}}, label={lst:bot.py}]{bot.py}
 
